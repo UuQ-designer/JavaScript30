@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>JS Drum Kit</title>
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-
-
   <div class="keys">
     <div data-key="65" class="key">
       <kbd>A</kbd>
@@ -57,10 +57,68 @@
   <audio data-key="75" src="sounds/tom.wav"></audio>
   <audio data-key="76" src="sounds/tink.wav"></audio>
 
-<script>
+  <!-- My Implementation -->
+  <!--  <script>
+    window.onload = function () {
+      function findKeyEle(keyCode) {
+        let target = null, audio = null;
+        for (let i = 0; i < keys.length; i++) {
+          if (keys[i].dataset.key === keyCode) {
+            target = keys[i];
+            audio = audios[i];
+            break;
+          }
+        }
+        return { target, audio };
+      }
+      const keys = document.querySelectorAll(".key");
+      const audios = document.querySelectorAll("audio");
+      console.log("keys", keys);
+      // 监听键盘事件，获取敲击的key-code
+      let target = null;
+      document.addEventListener("keydown", function (e) {
+        keyCode = e.keyCode + "";
+        let { target, audio } = findKeyEle(keyCode);
+        if (target && audio) {
+          target.classList.add("playing");
+          audio.currentTime = 0;
+          audio.play();
+        }
+      });
+      document.addEventListener("keyup", function (e) {
+        keyCode = e.keyCode + "";
+        let { target, audio } = findKeyEle(keyCode);
+        if (target && audio) {
+          target.classList.remove("playing");
+        }
+      });
+    }
 
-</script>
+  </script> -->
+  <!-- Improvement -->
+  <script>
+    window.onload = function () {
+      // 监听键盘事件，获取敲击的key-code
+      function playAudio(e) {
+        const key = document.querySelector(`.key[data-key="${e.keyCode}"]`);
+        const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`);
+        if (!key || !audio) return;
+        audio.currentTime = 0;
+        audio.play();
+        key.classList.add("playing");
+      }
+      function removePlay(e) {
+        if (e.propertyName !== "box-shadow") return;
+        this.classList.remove("playing");
+      }
+      const keys = document.querySelectorAll(".key");
+      keys.forEach(key => key.addEventListener("transitionend", removePlay));
+      document.addEventListener("keydown", playAudio);
+    }
+
+  </script>
 
 
 </body>
+
 </html>
